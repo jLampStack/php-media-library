@@ -1,8 +1,9 @@
 <?php 
-
-	@include('inc/data.php');
+	@include('./inc/data.php');
+	@include('./inc/functions.php');
 
 	$pageTitle = "Full Catalog";
+	$section = null;
 
 	if(isset($_GET["cat"])) {
 		if($_GET["cat"] == "books") {
@@ -23,18 +24,20 @@
 
 <div class="section catalog page">
 	<div class="wrapper">
-		<h1><?= $pageTitle; ?></h1>
+		<h1>
+			<?php if ($section != null) {
+				echo "<a href='catalog.php'>Full Catalog</a> &gt; ";
+			} 
+		?>
+		</h1>
 		<ul class="items">
 			<?php
-				foreach( $catalog as $item => $index ) {
-					echo "<li>
-									<a href='#'>
-										<img src=' {$index['img']} ' alt=' {$index['title']} ' />
-										<p>View Details</p>
-									</a>
-								</li>";
+				//Filters $catalog array to return only matching sections
+				$categories = array_category($catalog, $section);
+				// Loops $categories
+				foreach( $categories as $id ) {
+					echo get_item_html($id, $catalog[$id]); 
 				}
-				
 			?>
 		</ul>
 	</div>
